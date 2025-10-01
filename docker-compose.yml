@@ -36,10 +36,10 @@ services:
       - frontend
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certs:/etc/nginx/certs:ro
     ports:
       - "80:80"
-      # 如先用 HTTP，443 可暫不開；啟用 Cloudflare Origin Cert 後再打開
-      # - "443:443"
+      - "443:443"
     networks:
       - appnet
     restart: unless-stopped
