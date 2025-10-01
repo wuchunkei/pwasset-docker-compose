@@ -1,0 +1,24 @@
+# Node frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# Python backend
+backend/__pycache__/
+*.pyc
+
+# Environment files
+*.env
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Archives and local binaries
+*.zip
+*.exe
+*.ppk
+*.pem
+
+# Git
+.git/

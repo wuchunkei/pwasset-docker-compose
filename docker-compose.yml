@@ -1,0 +1,52 @@
+name: pwasset
+version: "3.9"
+services:
+  backend:
+    image: python:3.11-slim
+    platform: linux/arm64/v8
+    container_name: pwasset-backend
+    working_dir: /app
+    volumes:
+      - ./backend:/app
+    env_file:
+      - backend.env
+    command: ["python", "app.py"]
+    networks:
+      - appnet
+    restart: unless-stopped
+
+  frontend:
+    image: node:20-alpine
+    platform: linux/arm64/v8
+    container_name: pwasset-frontend
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    env_file:
+      - frontend.env
+    # --host 讓容器內的 Vite 對外可訪問
+    command: ["sh", "-lc", "npm i && npm run dev -- --host --port 5173"]
+    networks:
+      - appnet
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
+    platform: linux/arm64/v8
+    container_name: pwasset-nginx
+    depends_on:
+      - backend
+      - frontend
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "80:80"
+      # 如先用 HTTP，443 可暫不開；啟用 Cloudflare Origin Cert 後再打開
+      # - "443:443"
+    networks:
+      - appnet
+    restart: unless-stopped
+
+networks:
+  appnet:
+    driver: bridge
