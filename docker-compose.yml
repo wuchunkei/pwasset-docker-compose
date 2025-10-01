@@ -3,21 +3,19 @@ version: "3.9"
 services:
   backend:
     image: python:3.11-slim
-    platform: linux/arm64/v8
     container_name: pwasset-backend
     working_dir: /app
     volumes:
       - ./backend:/app
     env_file:
       - backend.env
-    command: ["python", "app.py"]
+    command: ["sh", "-lc", "pip install -r requirements.txt && python app.py"]
     networks:
       - appnet
     restart: unless-stopped
 
   frontend:
     image: node:20-alpine
-    platform: linux/arm64/v8
     container_name: pwasset-frontend
     working_dir: /app
     volumes:
@@ -32,7 +30,6 @@ services:
 
   nginx:
     image: nginx:alpine
-    platform: linux/arm64/v8
     container_name: pwasset-nginx
     depends_on:
       - backend
